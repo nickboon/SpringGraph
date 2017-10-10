@@ -1,30 +1,37 @@
 (function(app) {
-    var foregroundColour = '#0000ff';
+    /* Some colours...
+     *  
+     * red bb2222
+     * green 66aa66
+     * blue 2222bb
+     * brown bb9966            
+     */
+    var foregroundColour = '#66aa66',
+        backgroundColour = '#ffffff',
+        labelColour = '#ff0000',
+        nodeRadius = 30,
 
-    app.run = function() {
-        var diagram = app.createDefaultFullScreenDiagram(),
-            perspective = diagram.perspective,
-            drawing = app.createDrawingObject(perspective),
-            primitives = app.createPrimitivesObject(drawing),
+        forceDirectedGraphs = app.createForceDirectedGraphObject(),
+        createEdge = forceDirectedGraphs.createEdge,
+        createNode = forceDirectedGraphs.createNode;
 
-            forceDirectedGraphs = app.createForceDirectedGraphObject(),
-            createEdge = forceDirectedGraphs.createEdge,
-            createNode = forceDirectedGraphs.createNode,
-            nodes = {
-                a: createNode(':p', '#66aa66'), // red bb2222
-                b: createNode(';p', '#66aa66'), // green 66aa66
-                c: createNode(':(', '#66aa66'), // blue 2222bb
-                d: createNode(':(', '#66aa66'), // brown bb9966
-                e: createNode(':p', '#66aa66'), // red bb2222
-                f: createNode(';p', '#66aa66'), // green 66aa66
-                g: createNode(':(', '#66aa66'), // blue 2222bb
-                h: createNode(':(', '#66aa66'), // brown bb9966
-                i: createNode(':p', '#66aa66'), // red bb2222
-                j: createNode(';p', '#66aa66'), // green 66aa66
-                k: createNode(':(', '#66aa66'), // blue 2222bb
-                l: createNode(':(', '#66aa66'), // brown bb9966
+    function getReqularIsohedronSphereGraph() {
+        return {
+            nodes: {
+                a: createNode('a', foregroundColour, nodeRadius),
+                b: createNode('b', foregroundColour, nodeRadius),
+                c: createNode('c', foregroundColour, nodeRadius),
+                d: createNode('d', foregroundColour, nodeRadius),
+                e: createNode('e', foregroundColour, nodeRadius),
+                f: createNode('f', foregroundColour, nodeRadius),
+                g: createNode('g', foregroundColour, nodeRadius),
+                h: createNode('h', foregroundColour, nodeRadius),
+                i: createNode('i', foregroundColour, nodeRadius),
+                j: createNode('j', foregroundColour, nodeRadius),
+                k: createNode('k', foregroundColour, nodeRadius),
+                l: createNode('l', foregroundColour, nodeRadius),
             },
-            edges = [
+            edges: [
                 createEdge('a', 'b'),
                 createEdge('a', 'c'),
                 createEdge('a', 'd'),
@@ -55,10 +62,24 @@
                 createEdge('j', 'k'),
                 createEdge('j', 'l'),
                 createEdge('k', 'l')
-            ],
-            tree = forceDirectedGraphs.solids.createTree(perspective, nodes, edges),
+            ]
+        };
+    }
+
+    app.run = function() {
+        var diagram = app.createDefaultFullScreenDiagram(),
+            perspective = diagram.perspective,
+            drawing = app.createDrawingObject(perspective),
+            primitives = app.createPrimitivesObject(drawing),
+
+            isohedron = getReqularIsohedronSphereGraph(),
+            nodes = isohedron.nodes,
+            edges = isohedron.edges,
+            sphereGraph = app.createforceDirectedSphereGraphObject(perspective),
+            graph = sphereGraph.create(nodes, edges, backgroundColour),
+
             getHelices = function() {
-                var numberOfTurns = 60,
+                var numberOfTurns = 40,
                     createHelix = app.createHelixObject(primitives).createHelix,
                     a,
                     b,
@@ -78,14 +99,30 @@
                 return result;
             },
             helices = getHelices(),
-            solidsList = helices, //[tree].concat(helices),
+
+            getLabels = function() {
+                var createLabel = sphereGraph.createFloatingLabel,
+                    forEachNodeIn = sphereGraph.forEachNodeIn,
+                    result = [];
+
+                forEachNodeIn(nodes, function(node) {
+                    var offset = node.radius;
+                    result.push(createLabel(node.text, node.centre, offset, labelColour, undefined, undefined, true));
+                });
+                return result;
+            },
+            labels = getLabels(),
+
+            solids = labels.concat(helices).concat([graph]),
             stage = diagram.stage;
 
-        stage.setSolids(solidsList);
+        document.body.style.background = backgroundColour;
+        stage.setSolids(solids);
         stage.setTransformers([
-            app.createTransformationObject().createKeyboardDrivenTransformer(solidsList),
+            app.createTransformationObject().createKeyboardDrivenTransformer([graph]),
             app.createForceDirectedGraphTransformationsObject().createDefaultTransformer(nodes, edges, 200),
-            app.createSpringTransformationsObject().createTransformer(helices)
+            app.createSpringTransformationsObject().createTransformer(helices),
+            sphereGraph.createFloatingLabelTransformer(labels)
         ]);
     }
 })(window.DIAGRAM_APP || (window.DIAGRAM_APP = {}));
