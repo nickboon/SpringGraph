@@ -2,16 +2,14 @@
         var defaultRadius = 10,
             pointsFunctions = app.createPointsObject(),
             newPoint = pointsFunctions.newPoint,
-            copyOf = pointsFunctions.copyOf,
             shiftTo = pointsFunctions.shiftTo,
             shiftBy = pointsFunctions.shiftBy,
             createAxis = pointsFunctions.createAxis;
 
-        // create and return API for this module
         app.createHelixObject = function(primitives) {
             function getCurvePointSetsForCircleAtOrigin(r) {
-                var c = 0.551915024494, // magic constant for creating circles from bezier curves see http://spencermortensen.com/articles/bezier-circle/
-                    c = c * r;
+                var c = 0.551915024494; // magic constant for creating circles from bezier curves see http://spencermortensen.com/articles/bezier-circle/
+                c *= r;
 
                 return {
                     points: [
@@ -64,7 +62,7 @@
                     shiftTo(points[j + 10], curvesAtOrigin.handles[3][0]);
                     shiftTo(points[j + 11], curvesAtOrigin.handles[3][1]);
                     shiftTo(points[j + 12], curvesAtOrigin.points[0]);
-                };
+                }
             }
 
             function getPointsForHelix(numberOfTurns) {
@@ -77,7 +75,6 @@
 
             function createCurvePointSetsForHelix(points) {
                 var numberOfPoints = points.length,
-                    numberOfCurves = Math.floor(numberOfPoints / 4),
                     sets = [];
 
                 for (var i = numberOfPoints - 1; i > 2; i -= 3) {
@@ -101,8 +98,8 @@
                 return curves;
             }
 
-            function createHelix(pointA, pointB, radius, numberOfTurns, lineColour, alpha) {
-                var radius = radius || defaultRadius,
+            function createHelix(pointA, pointB, r, numberOfTurns, lineColour, alpha) {
+                var radius = r || defaultRadius,
                     points = getPointsForHelix(numberOfTurns),
                     curvePointSets = createCurvePointSetsForHelix(points);
 

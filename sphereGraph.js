@@ -1,16 +1,15 @@
 (function(app) {
-    // create and return API for this module
     app.createforceDirectedSphereGraphObject = function(perspective) {
         function forEachNodeIn(nodes, doAction) {
-            for (key in nodes) {
+            for (var key in nodes) {
                 if (nodes.hasOwnProperty(key)) {
                     doAction(nodes[key]);
                 }
             }
         }
 
-        function create(nodes, edges, fillColour, setUp) {
-            var setUp = setUp || app.createForceDirectedGraphTransformationsObject().defaultSetUp,
+        function create(nodes, edges, fillColour, su) {
+            var setUp = su || app.createForceDirectedGraphTransformationsObject().defaultSetUp,
                 primitives = [],
                 points = [],
                 sphere;
@@ -29,33 +28,41 @@
                 points: points,
                 primitives: primitives
             };
-        };
+        }
 
         function createFloatingLabel(text, anchor, offset, colour, alpha, size, isScaled) {
-            var drawing = drawing = app.createDrawingObject(perspective),
+            var drawing = app.createDrawingObject(perspective),
+                vectorDrawing = app.createVectorDrawingObject(perspective),
                 pointsFunctions = app.createPointsObject(),
                 newPoint = pointsFunctions.newPoint,
                 copyOf = pointsFunctions.copyOf,
                 shiftTo = pointsFunctions.shiftTo,
                 point = newPoint(),
                 defaultOffset = 3,
+
                 getNearestZ = function() {
                     return point.z;
                 },
                 draw = function(drawingContext, alpha) {
                     drawing.drawLabel(drawingContext, text, point, colour, alpha, size, isScaled);
                 },
+                getSvg = function() {
+                    return vectorDrawing.label(text, point, colour, alpha, size, isScaled);
+                },
+
                 primitive = {
                     points: [point],
                     getNearestZ: getNearestZ,
-                    draw: draw
+                    draw: draw,
+                    getSvg: getSvg
                 },
+
                 align = function() {
                     var target = copyOf(anchor);
 
                     target.z -= offset || defaultOffset;
                     shiftTo(point, target);
-                };
+                }
 
             return {
                 points: [point],
