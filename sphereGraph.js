@@ -1,5 +1,5 @@
 (function(app) {
-    app.createforceDirectedSphereGraphObject = function(perspective) {
+    app.createforceDirectedSphereGraphObject = function() {
         function forEachNodeIn(nodes, doAction) {
             for (var key in nodes) {
                 if (nodes.hasOwnProperty(key)) {
@@ -17,7 +17,7 @@
             forEachNodeIn(nodes, function(node) {
                 points.push(node.centre);
 
-                sphere = app.createFakeSpheresObject(perspective)
+                sphere = app.createFakeSpheresObject()
                     .create(node.centre, node.radius, node.colour, fillColour);
                 primitives = primitives.concat(sphere.primitives);
             });
@@ -30,9 +30,9 @@
             };
         }
 
-        function createFloatingLabel(text, anchor, offset, colour, alpha, size, isScaled) {
-            var drawing = app.createDrawingObject(perspective),
-                vectorDrawing = app.createVectorDrawingObject(perspective),
+        function createFloatingLabel(text, anchor, offset, colour, alpha, font, isScaled) {
+            var //drawing = app.draw(),
+            //vectorDrawing = app.createVectorDrawingObject(),
                 pointsFunctions = app.createPointsObject(),
                 newPoint = pointsFunctions.newPoint,
                 copyOf = pointsFunctions.copyOf,
@@ -40,22 +40,23 @@
                 point = newPoint(),
                 defaultOffset = 3,
 
-                getNearestZ = function() {
-                    return point.z;
-                },
-                draw = function(drawingContext, alpha) {
-                    drawing.drawLabel(drawingContext, text, point, colour, alpha, size, isScaled);
-                },
-                getSvg = function() {
-                    return vectorDrawing.label(text, point, colour, alpha, size, isScaled);
-                },
+                // getNearestZ = function() {
+                //     return point.z;
+                // },
 
-                primitive = {
-                    points: [point],
-                    getNearestZ: getNearestZ,
-                    draw: draw,
-                    getSvg: getSvg
-                },
+                // draw = function(context, perspective, alpha) {
+                //     drawing.label(context, perspective, text, point, colour, alpha, font, isScaled);
+                // },
+                // getSvg = function() {
+                //     return vectorDrawing.label(text, point, colour, alpha, size, isScaled);
+                // },
+
+                // primitive = {
+                //     points: [point],
+                //     getNearestZ: getNearestZ,
+                //     draw: draw,
+                //     //getSvg: getSvg
+                // },
 
                 align = function() {
                     var target = copyOf(anchor);
@@ -66,7 +67,7 @@
 
             return {
                 points: [point],
-                primitives: [primitive],
+                primitives: [app.createPrimitives().label(text, point, colour, alpha, font, isScaled)],
                 align: align
             };
         }
@@ -79,10 +80,6 @@
             }
 
             return { transform: transform };
-        }
-
-        if (!perspective) {
-            throw 'You need to pass in a perspective object to create sphere graph components.';
         }
 
         return {

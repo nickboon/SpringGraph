@@ -92,7 +92,7 @@
                 var curves = [];
 
                 curvePointSets.forEach(function(set) {
-                    curves.push(primitives.createCurve(set, lineColour, alpha));
+                    curves.push(primitives.curve(set, lineColour, alpha));
                 });
 
                 return curves;

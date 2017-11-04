@@ -67,15 +67,11 @@
     }
 
     app.run = function() {
-        var diagram = app.createDefaultFullScreenDiagram(),
-            perspective = diagram.perspective,
-            drawing = app.createDrawingObject(perspective),
-            primitives = app.createPrimitivesObject(drawing),
-
+        var primitives = app.createPrimitives(),
             isohedron = getReqularIsohedronSphereGraph(),
             nodes = isohedron.nodes,
             edges = isohedron.edges,
-            sphereGraph = app.createforceDirectedSphereGraphObject(perspective),
+            sphereGraph = app.createforceDirectedSphereGraphObject(),
             graph = sphereGraph.create(nodes, edges, backgroundColour),
 
             getHelices = function() {
@@ -112,14 +108,13 @@
                 return result;
             },
             labels = getLabels(),
-
             solids = labels.concat(helices).concat([graph]),
-            stage = diagram.stage;
+            stage = app.createStage();
 
         document.body.style.background = backgroundColour;
-        stage.setSolids(solids);
+        stage.setPrimitives(solids);
         stage.setTransformers([
-            app.createTransformationObject().createKeyboardDrivenTransformer([graph]),
+            //app.createTransformationObject().createKeyboardDrivenTransformer([graph]),
             app.createForceDirectedGraphTransformationsObject().createDefaultTransformer(nodes, edges, 200),
             app.createSpringTransformationsObject().createTransformer(helices),
             sphereGraph.createFloatingLabelTransformer(labels)
