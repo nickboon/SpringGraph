@@ -31,39 +31,19 @@
         }
 
         function createFloatingLabel(text, anchor, offset, colour, alpha, font, isScaled) {
-            var //drawing = app.draw(),
-            //vectorDrawing = app.createVectorDrawingObject(),
-                pointsFunctions = app.createPointsObject(),
+            var pointsFunctions = app.createPointsObject(),
                 newPoint = pointsFunctions.newPoint,
                 copyOf = pointsFunctions.copyOf,
                 shiftTo = pointsFunctions.shiftTo,
                 point = newPoint(),
-                defaultOffset = 3,
+                defaultOffset = 3;
 
-                // getNearestZ = function() {
-                //     return point.z;
-                // },
+            function align() {
+                var target = copyOf(anchor);
 
-                // draw = function(context, perspective, alpha) {
-                //     drawing.label(context, perspective, text, point, colour, alpha, font, isScaled);
-                // },
-                // getSvg = function() {
-                //     return vectorDrawing.label(text, point, colour, alpha, size, isScaled);
-                // },
-
-                // primitive = {
-                //     points: [point],
-                //     getNearestZ: getNearestZ,
-                //     draw: draw,
-                //     //getSvg: getSvg
-                // },
-
-                align = function() {
-                    var target = copyOf(anchor);
-
-                    target.z -= offset || defaultOffset;
-                    shiftTo(point, target);
-                }
+                target.z -= offset || defaultOffset;
+                shiftTo(point, target);
+            }
 
             return {
                 points: [point],
