@@ -6,7 +6,7 @@
             shiftBy = pointsFunctions.shiftBy,
             createAxis = pointsFunctions.createAxis;
 
-        app.createHelixObject = function(primitives) {
+        app.createHelixObject = function() {
             function getCurvePointSetsForCircleAtOrigin(r) {
                 var c = 0.551915024494; // magic constant for creating circles from bezier curves see http://spencermortensen.com/articles/bezier-circle/
                 c *= r;
@@ -89,10 +89,11 @@
             }
 
             function getPrimitives(curvePointSets, lineColour, alpha) {
-                var curves = [];
+                var createCurve = app.primitives.createCurve,
+                    curves = [];
 
                 curvePointSets.forEach(function(set) {
-                    curves.push(primitives.curve(set, lineColour, alpha));
+                    curves.push(createCurve(set, lineColour, alpha));
                 });
 
                 return curves;
@@ -119,10 +120,6 @@
                     primitives: getPrimitives(curvePointSets, lineColour, alpha),
                     align: align
                 };
-            }
-
-            if (!primitives) {
-                throw 'You need to pass a primitives object to create a helix.';
             }
 
             return { createHelix: createHelix };

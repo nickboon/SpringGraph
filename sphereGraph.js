@@ -47,7 +47,7 @@
 
             return {
                 points: [point],
-                primitives: [app.createPrimitives().label(text, point, colour, alpha, font, isScaled)],
+                primitives: [app.primitives.createLabel(text, point, colour, alpha, font, isScaled)],
                 align: align
             };
         }
