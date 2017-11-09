@@ -67,8 +67,7 @@
     }
 
     app.run = function() {
-        var primitives = app.createPrimitives(),
-            isohedron = getReqularIsohedronSphereGraph(),
+        var isohedron = getReqularIsohedronSphereGraph(),
             nodes = isohedron.nodes,
             edges = isohedron.edges,
             sphereGraph = app.createforceDirectedSphereGraphObject(),
@@ -76,7 +75,7 @@
 
             getHelices = function() {
                 var numberOfTurns = 40,
-                    createHelix = app.createHelixObject(primitives).createHelix,
+                    createHelix = app.createHelixObject().createHelix,
                     a,
                     b,
                     result = [];
@@ -112,7 +111,7 @@
             stage = app.createStage();
 
         document.body.style.background = backgroundColour;
-        stage.setPrimitives(solids);
+        stage.setSolids(solids);
         stage.setTransformers([
             //app.createTransformationObject().createKeyboardDrivenTransformer([graph]),
             app.createForceDirectedGraphTransformationsObject().createDefaultTransformer(nodes, edges, 200),
