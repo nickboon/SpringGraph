@@ -108,15 +108,17 @@
             },
             labels = getLabels(),
             solids = labels.concat(helices).concat([graph]),
-            stage = app.createStage();
+            stage = app.createStage(),
+            inputTransformer = app.createInputTransformer([graph]);
 
         document.body.style.background = backgroundColour;
         stage.setSolids(solids);
         stage.setTransformers([
-            //app.createTransformationObject().createKeyboardDrivenTransformer([graph]),
+            inputTransformer,
             app.createForceDirectedGraphTransformationsObject().createDefaultTransformer(nodes, edges, 200),
             app.createSpringTransformationsObject().createTransformer(helices),
             sphereGraph.createFloatingLabelTransformer(labels)
         ]);
+        app.createUiObject().setDefaultTransformationKeyListeners(inputTransformer);
     }
 })(window.DIAGRAM_APP || (window.DIAGRAM_APP = {}));
