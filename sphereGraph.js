@@ -1,12 +1,6 @@
 (function(app) {
     app.createforceDirectedSphereGraphObject = function() {
-        function forEachNodeIn(nodes, doAction) {
-            for (var key in nodes) {
-                if (nodes.hasOwnProperty(key)) {
-                    doAction(nodes[key]);
-                }
-            }
-        }
+        var forEachNodeIn = app.createSetsObject().forEachValueIn;
 
         function create(nodes, edges, fillColour, su) {
             var setUp = su || app.createForceDirectedGraphTransformationsObject().defaultSetUp,
